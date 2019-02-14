@@ -1,90 +1,81 @@
-function inIframe() {
-	try {
-		return window.self !== window.top;
-	} catch (e) {
-		return true;
-	}
-}
+/**
+ * @title: Random Quote Generator
+ * @objective: Get a random quote whenever button is clicked
+ */
 
-var colors = [
-	'#490A3D',
-	'#BD1550',
-	'#E97F02',
-	'#F8CA00',
-	'#8A9B0F',
-	'#69D2E7',
-	'#FA6900',
-	'#16a085',
-	'#27ae60',
-	'#2c3e50',
-	'#f39c12',
-	'#e74c3c',
-	'#9b59b6',
-	'#FB6964',
-	'#342224',
-	'#472E32',
-	'#77B1A9',
-	'#73A857'
+var quoteArray = [
+	{
+		content: "Graphic design is building systems",
+		author: "Michael Stinson"
+	},
+	{
+		content: "I rarely agree with what clients ask me to do.",
+		author: "Ross Lovegrove"
+	},
+	{
+		content: "I think most programmers spend the first 5 years of their career mastering complexity, and the rest of their lives learning simplicity.",
+		author: "Buzz Andersen"
+	},
+	{
+		content: "Make it simple. Make it memorable. Make it inviting to look at. Make it fun to read.",
+		author: "Leo Burnett"
+	},
+	{
+		content: "What makes great design great is not a trendy technique, but the logic and conceptual aspect that were figured out in the designer's mind &ndash; or on more likely, on paper &ndash; before a mouse cursor ever opened Photoshop.",
+		author: "Kyle Meyer"
+	},
+	{
+		content: "Designers tend to whisper, ad agencies tend to shout.",
+		author: " David Stuart"
+	},
+	{
+		content: "Design is the method of putting form and content together. Design, just as art, has multiple definitions; there is no single definition. Design can be art. Design can be aesthetics. Design is so simple, that's why it is so complicated.",
+		author: "Paul Rand"
+	},
+	{
+		content: "Tell it like it is, in a way they want to hear it.",
+		author: "Wihan Meerholz"
+	},
+	{
+		content: "The best way to find any and all errors is to publish your work.",
+		author: "Dan Vore"
+	},
+	{
+		content: "Creativity is piercing the mundane to find the marvelous.",
+		author: "Bill Moyers"
+	},
+	{
+		content: "I warn you against believing that advertising is a science.",
+		author: "Bill Bernbach"
+	}
 ];
 
-var quotes = [
-	["You only live once, but if you do it right, once is enough.", "Mae West"],
-	["I am so clever that sometimes I don't understand a single word of what I am saying.", "Oscar Wilde"],
-	["Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", "Albert Einstein"],
-	["The most beautiful experience we can have is the mysterious. It is the fundamental emotion that stands at the cradle of true art and true science.", "Albert Einstein"]
-	["It is our choices, Harry, that show what we truly are, far more than our abilities.", "J.K. Rowling, Harry Potter and the Chamber of Secrets"],
-	["All men who have turned out worth anything have had the chief hand in their own education.", "Walter Scott"],
-	["Trust yourself. You know more than you think you do.", "Benjamin Spock"],
-	["No one can make you feel inferior without your consent.", "Eleanor Roosevelt, This is My Story"],
-	["To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.", "Ralph Waldo Emerson"],
-	["Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines. Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.", "H. Jackson Brown Jr., P.S. I Love You"]
-];
+//grab html elements
+var button = document.getElementById('new-quote'),
+	quote = document.getElementById('text'),
+	author = document.getElementById('author'),
+	tweet = document.getElementById('tweet-quote'),
+	thisQuote,
+	thisAuthor,
+	random;
 
+//Generate a Random Quote
+window.onload = randomQuote;
+button.addEventListener('click', randomQuote);
 
-var currentQuote = "";
-var currentAuthor = "";
-var randomquote = "";
-var randomcolor = "";
+//run the function so there are no double buttons happening
+tweetQuote();
 
-function getQuote() {
-	randomquote = Math.floor(Math.random() * quotes.length);
-	randomcolor = Math.floor(Math.random() * colors.length);
-	currentQuote = quotes[randomquote][0];
-	currentAuthor = quotes[randomquote][1];
-	if (inIframe()) {
-		$('#tweet-quote').attr('href', 'https://twitter.com/intent/tweet?hashtags=quotes&related=aLamm&text=' + encodeURIComponent('"' + currentQuote + '" ' + currentAuthor));
-	}
-
-	$(document).ready(function () {
-		$('html body').animate({
-			backgroundColor: colors[randomcolor],
-			color: colors[randomcolor]
-		}, 500);
-		$('#newquote, .social-icons .fa-twitter').animate({ backgroundColor: colors[randomcolor] }, 500);
-		$('blockquote footer').animate({ color: colors[randomcolor] }, 500);
-		$('blockquote').animate({ borderLeftColor: colors[randomcolor] }, 500);
-		$('#quotetext').animate({ opacity: 0 }, 500, function () {
-			$(this).animate({ opacity: 1 }, 500);
-			$(this).text(currentQuote);
-		});
-		$('#quotesource').animate({ opacity: 0 }, 500, function () {
-			$(this).animate({ opacity: 1 }, 500);
-			$(this).text(currentAuthor);
-		});
-	});
+//random quote function
+function randomQuote() {
+	//get a random number to pick a random quote object
+	random = Math.floor(Math.random() * quoteArray.length);
+	//get that random quote's content
+	quote.innerHTML = quoteArray[random].content;
+	//get that random quote's author
+	author.innerHTML =  quoteArray[random].author;
+	thisQuote = quoteArray[random].content;
+	thisAuthor = quoteArray[random].author
+	tweet.setAttribute('href', `https://twitter.com/intent/tweet?text=${thisQuote} - ${thisAuthor}`, "_blank");
+	
 }
-
-function openURL(url) {
-	window.open(url, 'Share', 'width=550, height=400, toolbar=0, scrollbars=1 ,location=0 ,statusbar=0,menubar=0, resizable=0');
-}
-
-getQuote();
-
-$(document).ready(function () {
-	$('#newquote').on('click', getQuote);
-	$('#tweetquote').on('click', function () {
-		if (!inIframe()) {
-			openURL('https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=' + encodeURIComponent('"' + currentQuote + '" ' + currentAuthor));
-		}
-	});
-});
